@@ -1,0 +1,11 @@
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.firewall
+  properties:
+    network: global/networks/default
+    sourceRanges: ["0.0.0.0/0"]
+    direction: INGRESS
+    allowed:
+    - IPProtocol: TCP
+      ports: ["2888", "3888", "2181"]
+    targetTags: ["zookeeper"]

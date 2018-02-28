@@ -1,0 +1,14 @@
+imports:
+- path: zookeeper-template.jinja
+- path: zookeeper-firewall-template.jinja
+- path: startup.sh
+
+resources:
+- name: zookeeper
+  type: zookeeper-template.jinja
+  properties:
+    zone: us-east1-c
+    machine-type: f1-micro
+    source-image: projects/centos-cloud/global/images/family/centos-7
+- name: zookeeper-firewall
+  type: zookeeper-firewall-template.jinja
