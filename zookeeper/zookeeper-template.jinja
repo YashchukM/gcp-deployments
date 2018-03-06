@@ -12,7 +12,8 @@ resources:
       initializeParams:
         sourceImage: {{ properties["source-image"] }}
     networkInterfaces:
-    - network: global/networks/default
+    - network: {{ properties["network"] }}
+      subnetwork: {{ properties["subnetwork"] }}
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT

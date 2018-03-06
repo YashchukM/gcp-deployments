@@ -1,0 +1,11 @@
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.firewall
+  properties:
+    network: {{ properties["network"] }}
+    sourceRanges: ["0.0.0.0/0"]
+    direction: INGRESS
+    priority: 65534
+    allowed:
+    - IPProtocol: TCP
+      ports: ["22"]

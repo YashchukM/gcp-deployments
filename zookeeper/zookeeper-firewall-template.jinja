@@ -2,7 +2,7 @@ resources:
 - name: {{ env["name"] }}
   type: compute.v1.firewall
   properties:
-    network: global/networks/default
+    network: {{ properties["network"] }}
     sourceRanges: ["0.0.0.0/0"]
     direction: INGRESS
     allowed:
