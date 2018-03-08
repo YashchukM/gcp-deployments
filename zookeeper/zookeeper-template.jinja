@@ -17,10 +17,17 @@ resources:
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT
+        natIP: {{ properties["local-ip"] }}
     tags:
       items: ["zookeeper"]
     metadata:
       items:
+      - key: local-ip
+        value: {{ properties["local-ip"] }}
+      - key: cluster-ips
+        value: {{ properties["cluster-ips"] }}
+      - key: docker-user
+        value: {{ properties["docker-user"] }}
       - key: startup-script
         value: |
-          {{ imports["startup.sh"]|indent(10) }}
+          {{ imports["startup.sh"] | indent(10) }}

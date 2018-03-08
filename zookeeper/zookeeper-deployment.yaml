@@ -5,6 +5,8 @@ imports:
   name: subnetwork-template.jinja
 - path: ../network/network-firewall-template.jinja
   name: network-firewall-template.jinja
+- path: ../network/address-template.jinja
+  name: address-template.jinja
 - path: zookeeper-template.jinja
 - path: zookeeper-firewall-template.jinja
 - path: startup.sh
@@ -12,12 +14,19 @@ imports:
 resources:
 - name: my-network
   type: network-template.jinja
+
 - name: my-subnet-us-east1
   type: subnetwork-template.jinja
   properties:
     region: us-east1
     network: $(ref.my-network.selfLink)
     ipRange: 10.0.10.0/24
+
+- name: zookeeper-address
+  type: address-template.jinja
+  properties:
+    region: us-east1
+
 - name: zookeeper
   type: zookeeper-template.jinja
   properties:
@@ -26,10 +35,15 @@ resources:
     zone: us-east1-c
     machine-type: f1-micro
     source-image: projects/centos-cloud/global/images/family/centos-7
+    local-ip: $(ref.zookeeper-address.address)
+    cluster-ips: $(ref.zookeeper-address.address)
+    docker-user: myashchuk
+
 - name: zookeeper-firewall
   type: zookeeper-firewall-template.jinja
   properties:
     network: $(ref.my-network.selfLink)
+    
 - name: my-network-default-firewall
   type: network-firewall-template.jinja
   properties:
