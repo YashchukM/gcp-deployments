@@ -1,0 +1,15 @@
+resources:
+- name: my-network
+  type: network-template.jinja
+
+- name: my-subnet-us-east1
+  type: subnetwork-template.jinja
+  properties:
+    region: us-east1
+    network: $(ref.my-network.selfLink)
+    ipRange: 10.0.10.0/24
+
+- name: my-network-default-firewall
+  type: network-firewall-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)

@@ -1,0 +1,35 @@
+resources:
+- name: my-subnet-us-west1
+  type: subnetwork-template.jinja
+  properties:
+    region: us-west1
+    network: $(ref.my-network.selfLink)
+    ipRange: 10.0.11.0/24
+
+- name: zookeeper-full
+  type: zookeeper-full-template.jinja
+
+- name: kafka-address
+  type: address-template.jinja
+  properties:
+    region: us-west1
+
+- name: kafka-firewall
+  type: kafka-firewall-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+
+- name: kafka
+  type: kafka-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+    subnetwork: $(ref.my-subnet-us-west1.selfLink)
+    zone: us-west1-c
+    machine-type: f1-micro
+    source-image: projects/centos-cloud/global/images/family/centos-7
+    kafka-id: '1'
+    local-ip: $(ref.kafka-address.address)
+    cluster-ips: $(ref.kafka-address.address)
+    zk-cluster-ips: $(ref.zookeeper-address.address)
+    heap-opts: -Xms256M -Xmx256M
+    docker-user: myashchuk

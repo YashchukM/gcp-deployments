@@ -1,0 +1,27 @@
+imports:
+- path: ../network/network-full-template.jinja
+  name: network-full-template.jinja
+- path: ../network/network-template.jinja
+  name: network-template.jinja
+- path: ../network/subnetwork-template.jinja
+  name: subnetwork-template.jinja
+- path: ../network/network-firewall-template.jinja
+  name: network-firewall-template.jinja
+- path: ../network/address-template.jinja
+  name: address-template.jinja
+- path: ../zookeeper/zookeeper-template.jinja
+  name: zookeeper-template.jinja
+- path: ../zookeeper/zookeeper-firewall-template.jinja
+  name: zookeeper-firewall-template.jinja
+- path: ../zookeeper/zookeeper-full-template.jinja
+  name: zookeeper-full-template.jinja
+- path: ../zookeeper/zookeeper-startup.sh
+  name: zookeeper-startup.sh
+- path: kafka-full-template.jinja
+- path: kafka-template.jinja
+- path: kafka-firewall-template.jinja
+- path: kafka-startup.sh
+
+resources:
+- name: kafka-full
+  type: kafka-full-template.jinja

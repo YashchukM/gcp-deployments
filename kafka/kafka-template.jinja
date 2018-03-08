@@ -1,0 +1,37 @@
+resources:
+- name: {{ env["name"] }}
+  type: compute.v1.instance
+  properties:
+    zone: {{ properties["zone"] }}
+    machineType: zones/{{ properties["zone"] }}/machineTypes/{{ properties["machine-type"] }}
+    disks:
+    - deviceName: boot
+      type: PERSISTENT
+      boot: true
+      autoDelete: true
+      initializeParams:
+        sourceImage: {{ properties["source-image"] }}
+    networkInterfaces:
+    - network: {{ properties["network"] }}
+      subnetwork: {{ properties["subnetwork"] }}
+      accessConfigs:
+      - name: External NAT
+        type: ONE_TO_ONE_NAT
+        natIP: {{ properties["local-ip"] }}
+    tags:
+      items: ["kafka"]
+    metadata:
+      items:
+      - key: kafka-id
+        value: {{ properties["kafka-id"] }}
+      - key: cluster-ips
+        value: {{ properties["cluster-ips"] }}
+      - key: zk-cluster-ips
+        value: {{ properties["zk-cluster-ips"] }}
+      - key: heap-opts
+        value: {{ properties["heap-opts"] }}
+      - key: docker-user
+        value: {{ properties["docker-user"] }}
+      - key: startup-script
+        value: |
+          {{ imports["kafka-startup.sh"] | indent(10) }}

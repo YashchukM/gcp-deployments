@@ -1,0 +1,25 @@
+resources:
+- name: my-full-network
+  type: network-full-template.jinja
+
+- name: zookeeper-address
+  type: address-template.jinja
+  properties:
+    region: us-east1
+
+- name: zookeeper
+  type: zookeeper-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+    subnetwork: $(ref.my-subnet-us-east1.selfLink)
+    zone: us-east1-c
+    machine-type: f1-micro
+    source-image: projects/centos-cloud/global/images/family/centos-7
+    local-ip: $(ref.zookeeper-address.address)
+    cluster-ips: $(ref.zookeeper-address.address)
+    docker-user: myashchuk
+
+- name: zookeeper-firewall
+  type: zookeeper-firewall-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)

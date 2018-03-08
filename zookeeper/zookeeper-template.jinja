@@ -30,4 +30,4 @@ resources:
         value: {{ properties["docker-user"] }}
       - key: startup-script
         value: |
-          {{ imports["startup.sh"] | indent(10) }}
+          {{ imports["zookeeper-startup.sh"] | indent(10) }}

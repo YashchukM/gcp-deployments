@@ -9,7 +9,7 @@ imports:
   name: address-template.jinja
 - path: zookeeper-template.jinja
 - path: zookeeper-firewall-template.jinja
-- path: startup.sh
+- path: zookeeper-startup.sh
 
 resources:
 - name: my-network
