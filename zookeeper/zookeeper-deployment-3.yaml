@@ -1,0 +1,98 @@
+imports:
+- path: ../network/network-template.jinja
+  name: network-template.jinja
+- path: ../network/subnetwork-template.jinja
+  name: subnetwork-template.jinja
+- path: ../network/network-firewall-template.jinja
+  name: network-firewall-template.jinja
+- path: ../network/address-template.jinja
+  name: address-template.jinja
+- path: zookeeper-template.jinja
+- path: zookeeper-firewall-template.jinja
+- path: startup.sh
+
+resources:
+- name: my-network
+  type: network-template.jinja
+
+- name: my-subnet-us-east1
+  type: subnetwork-template.jinja
+  properties:
+    region: us-east1
+    network: $(ref.my-network.selfLink)
+    ipRange: 10.0.15.0/24
+
+- name: my-subnet-us-west1
+  type: subnetwork-template.jinja
+  properties:
+    region: us-west1
+    network: $(ref.my-network.selfLink)
+    ipRange: 10.0.16.0/24
+
+- name: my-subnet-us-central1
+  type: subnetwork-template.jinja
+  properties:
+    region: us-central1
+    network: $(ref.my-network.selfLink)
+    ipRange: 10.0.17.0/24
+
+- name: zookeeper-1-address
+  type: address-template.jinja
+  properties:
+    region: us-east1
+
+- name: zookeeper-1
+  type: zookeeper-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+    subnetwork: $(ref.my-subnet-us-east1.selfLink)
+    zone: us-east1-c
+    machine-type: f1-micro
+    source-image: projects/centos-cloud/global/images/family/centos-7
+    local-ip: $(ref.zookeeper-1-address.address)
+    cluster-ips: $(ref.zookeeper-1-address.address),$(ref.zookeeper-2-address.address),$(ref.zookeeper-3-address.address)
+    docker-user: myashchuk
+
+- name: zookeeper-2-address
+  type: address-template.jinja
+  properties:
+    region: us-west1
+
+- name: zookeeper-2
+  type: zookeeper-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+    subnetwork: $(ref.my-subnet-us-west1.selfLink)
+    zone: us-west1-c
+    machine-type: f1-micro
+    source-image: projects/centos-cloud/global/images/family/centos-7
+    local-ip: $(ref.zookeeper-2-address.address)
+    cluster-ips: $(ref.zookeeper-1-address.address),$(ref.zookeeper-2-address.address),$(ref.zookeeper-3-address.address)
+    docker-user: myashchuk
+
+- name: zookeeper-3-address
+  type: address-template.jinja
+  properties:
+    region: us-central1
+
+- name: zookeeper-3
+  type: zookeeper-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+    subnetwork: $(ref.my-subnet-us-central1.selfLink)
+    zone: us-central1-c
+    machine-type: f1-micro
+    source-image: projects/centos-cloud/global/images/family/centos-7
+    local-ip: $(ref.zookeeper-3-address.address)
+    cluster-ips: $(ref.zookeeper-1-address.address),$(ref.zookeeper-2-address.address),$(ref.zookeeper-3-address.address)
+    docker-user: myashchuk
+
+- name: zookeeper-firewall
+  type: zookeeper-firewall-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
+    
+- name: my-network-default-firewall
+  type: network-firewall-template.jinja
+  properties:
+    network: $(ref.my-network.selfLink)
