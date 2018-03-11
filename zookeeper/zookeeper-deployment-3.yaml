@@ -49,8 +49,9 @@ resources:
     zone: us-east1-c
     machine-type: f1-micro
     source-image: projects/centos-cloud/global/images/family/centos-7
-    local-ip: $(ref.zookeeper-1-address.address)
-    cluster-ips: $(ref.zookeeper-1-address.address),$(ref.zookeeper-2-address.address),$(ref.zookeeper-3-address.address)
+    private-ip: 10.0.15.2
+    public-ip: $(ref.zookeeper-1-address.address)
+    cluster-ips: 10.0.15.2,10.0.16.2,10.0.17.2
     docker-user: myashchuk
 
 - name: zookeeper-2-address
@@ -66,8 +67,9 @@ resources:
     zone: us-west1-c
     machine-type: f1-micro
     source-image: projects/centos-cloud/global/images/family/centos-7
-    local-ip: $(ref.zookeeper-2-address.address)
-    cluster-ips: $(ref.zookeeper-1-address.address),$(ref.zookeeper-2-address.address),$(ref.zookeeper-3-address.address)
+    private-ip: 10.0.16.2
+    public-ip: $(ref.zookeeper-2-address.address)
+    cluster-ips: 10.0.15.2,10.0.16.2,10.0.17.2
     docker-user: myashchuk
 
 - name: zookeeper-3-address
@@ -83,8 +85,9 @@ resources:
     zone: us-central1-c
     machine-type: f1-micro
     source-image: projects/centos-cloud/global/images/family/centos-7
-    local-ip: $(ref.zookeeper-3-address.address)
-    cluster-ips: $(ref.zookeeper-1-address.address),$(ref.zookeeper-2-address.address),$(ref.zookeeper-3-address.address)
+    private-ip: 10.0.17.2
+    public-ip: $(ref.zookeeper-3-address.address)
+    cluster-ips: 10.0.15.2,10.0.16.2,10.0.17.2
     docker-user: myashchuk
 
 - name: zookeeper-firewall

@@ -1,22 +1,21 @@
 #!/bin/bash
 
 # Additional functions
-function join_with_port {
+function wrap_with {
     local res
     local IFS=','
-    for ip in $2; do
-        res+=("$ip:$1")
+    for ip in $1; do
+        if [ -z $3 ]; then
+            res+=("$ip:$2")
+        else
+            res+=("$2://$ip:$3")
+        fi
     done
     echo "${res[*]}"
 }
 
-function wrap_with {
-    local res
-    local IFS=','
-    for ip in $3; do
-        res+=("$1://$ip:$2")
-    done
-    echo "${res[*]}"
+function get_metadata {
+    echo $(curl "http://metadata.google.internal/computeMetadata/v1/instance/attributes/$1" -H "Metadata-Flavor: Google")
 }
 
 # Install docker
@@ -25,16 +24,16 @@ sudo sh get-docker.sh
 sudo systemctl start docker
 
 # Get env variables from instance metadata
-ZK_CLUSTER_IPS=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/zk-cluster-ips -H "Metadata-Flavor: Google")
-ZK_CLUSTER=$(join_with_port 2181 $ZK_CLUSTER_IPS)
+ZK_CLUSTER_IPS=$(get_metadata zk-cluster-ips)
+ZK_CLUSTER=$(wrap_with $ZK_CLUSTER_IPS 2181)
 
-KAFKA_USER=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/docker-user -H "Metadata-Flavor: Google")
-KAFKA_ID=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/kafka-id -H "Metadata-Flavor: Google")
-KAFKA_CLUSTER_IPS=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/cluster-ips -H "Metadata-Flavor: Google")
-KAFKA_HEAP_OPTS=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/heap-opts -H "Metadata-Flavor: Google")
+KAFKA_USER=$(get_metadata docker-user)
+KAFKA_ID=$(get_metadata kafka-id)
+KAFKA_CLUSTER_IPS=$(get_metadata cluster-ips)
+KAFKA_HEAP_OPTS=$(get_metadata heap-opts)
 KAFKA_RUN_UID=$(id $KAFKA_USER -u)
 KAFKA_RUN_GID=$(id $KAFKA_USER -g)
-KAFKA_ADVERTISED_LISTENERS=$(wrap_with PLAINTEXT 9092 $KAFKA_CLUSTER_IPS)
+KAFKA_ADVERTISED_LISTENERS=$(wrap_with $KAFKA_CLUSTER_IPS PLAINTEXT 9092)
 
 # Pull and run image
 sudo docker run \

@@ -15,7 +15,7 @@ resources:
     zone: us-east1-c
     machine-type: f1-micro
     source-image: projects/centos-cloud/global/images/family/centos-7
-    local-ip: $(ref.zookeeper-address.address)
+    public-ip: $(ref.zookeeper-address.address)
     cluster-ips: $(ref.zookeeper-address.address)
     docker-user: myashchuk
 

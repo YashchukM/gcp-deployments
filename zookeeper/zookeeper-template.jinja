@@ -14,16 +14,23 @@ resources:
     networkInterfaces:
     - network: {{ properties["network"] }}
       subnetwork: {{ properties["subnetwork"] }}
+      {% if properties["private-ip"] is defined %}
+      networkIP: {{ properties["private-ip"] }}
+      {% endif %}
       accessConfigs:
       - name: External NAT
         type: ONE_TO_ONE_NAT
-        natIP: {{ properties["local-ip"] }}
+        natIP: {{ properties["public-ip"] }}
     tags:
       items: ["zookeeper"]
     metadata:
       items:
       - key: local-ip
-        value: {{ properties["local-ip"] }}
+        {% if properties["private-ip"] is defined %}
+        value: {{ properties["private-ip"] }}
+        {% else %}
+        value: {{ properties["public-ip"] }}
+        {% endif %}
       - key: cluster-ips
         value: {{ properties["cluster-ips"] }}
       - key: docker-user
